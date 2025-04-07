@@ -59,6 +59,7 @@
   <style lang="en" type="text/css" id="dark-mode-native-style"></style>
   <style lang="en" type="text/css" id="dark-mode-native-sheet"></style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="./fade.css">
 
 </head>
 
@@ -76,9 +77,9 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="#" id="home">Home<br></a></li>
-          <li><a href="/about/index.html" id="about">About</a></li>
-          <li><a href="/portfolio/index.html" id="courses">Porfolio</a></li>
+          <li><a href="../../../../umurava-challenge-fn/TheEliteGroup/elitegroup/index.html" id="home">Home<br></a></li>
+          <li><a href="../../../umurava-challenge-fn/TheEliteGroup//elitegroup/about/index.html" id="about">About</a></li>
+          <li><a href="../../../umurava-challenge-fn/TheEliteGroup/elitegroup/portfolio/index.html" id="courses">Porfolio</a></li>
           <!-- <li><a href="trainers.html">Trainers</a></li> -->
           <!-- <li><a href="updates.php" id="events">Updates</a></li>
               
@@ -678,7 +679,308 @@
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <!-- Main JS File -->
   <script src="./index_files/main(1).js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+  // Initialize AOS animation library if it's loaded
+  if (typeof AOS !== 'undefined') {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: false,
+      mirror: false
+    });
+  }
 
+  // Apply animations to elements as they enter viewport
+  const animateElements = document.querySelectorAll('.about h1, .about p, .why-box h3, .why-box p, .section-title h2, .section-title p');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (entry.target.tagName === 'H1' || entry.target.tagName === 'H3') {
+          entry.target.classList.add('animate-fade-in');
+        } else if (entry.target.classList.contains('section-title')) {
+          entry.target.classList.add('animate-scale-up');
+        } else {
+          entry.target.classList.add('animate-fade-in');
+        }
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  
+  animateElements.forEach(el => {
+    observer.observe(el);
+  });
+
+  // Apply alternating slide-in animations to rows
+  const rows = document.querySelectorAll('.row.gy-4');
+  
+  const rowObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        const leftCol = entry.target.querySelector('.col-lg-6:first-child');
+        const rightCol = entry.target.querySelector('.col-lg-6:last-child');
+        
+        if (index % 2 === 0) {
+          if (leftCol) leftCol.classList.add('animate-slide-left');
+          if (rightCol) rightCol.classList.add('animate-slide-right');
+        } else {
+          if (leftCol) leftCol.classList.add('animate-slide-right');
+          if (rightCol) rightCol.classList.add('animate-slide-left');
+        }
+        
+        rowObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  
+  rows.forEach(row => {
+    rowObserver.observe(row);
+  });
+
+  // Apply animations to course items
+  const courseItems = document.querySelectorAll('.course-item');
+  
+  const courseObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationDelay = `${index * 0.1}s`;
+        entry.target.classList.add('animate-scale-up');
+        courseObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  
+  courseItems.forEach(item => {
+    courseObserver.observe(item);
+  });
+
+  // Apply animations to why-us icon boxes
+  const iconBoxes = document.querySelectorAll('.icon-box');
+  
+  const iconObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationDelay = `${index * 0.1}s`;
+        entry.target.classList.add('animate-scale-up');
+        iconObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  
+  iconBoxes.forEach(box => {
+    iconObserver.observe(box);
+  });
+
+  // Apply animations to stats items with counter effect
+  const statsItems = document.querySelectorAll('.stats-item span');
+  
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const target = entry.target;
+        const finalValue = parseInt(target.textContent);
+        animateCounter(target, 0, finalValue, 2000);
+        statsObserver.unobserve(target);
+      }
+    });
+  }, { threshold: 0.5 });
+  
+  statsItems.forEach(item => {
+    statsObserver.observe(item);
+  });
+
+  // Counter animation function
+  function animateCounter(element, start, end, duration) {
+    let startTime = null;
+    
+    function animate(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const value = Math.floor(progress * (end - start) + start);
+      element.textContent = value;
+      
+      if (progress < 1) {
+        window.requestAnimationFrame(animate);
+      }
+    }
+    
+    window.requestAnimationFrame(animate);
+  }
+
+  // Scroll to top functionality
+  const scrollTopButton = document.getElementById('scroll-top');
+  
+  if (scrollTopButton) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollTopButton.classList.add('active');
+      } else {
+        scrollTopButton.classList.remove('active');
+      }
+    });
+    
+    scrollTopButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+
+  // Header scroll effect
+  const header = document.getElementById('header');
+  
+  if (header) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  }
+
+  // Add typing effect to hero headline
+  const heroHeading = document.querySelector('#hero h2');
+  if (heroHeading) {
+    heroHeading.classList.add('typing-effect');
+  }
+
+  // Add premium glow effect to important buttons
+  const premiumButtons = document.querySelectorAll('.btn-get-started, .btn-getstarted');
+  premiumButtons.forEach(button => {
+    button.classList.add('premium-glow');
+  });
+
+  // Image hover effect for about section images
+  const aboutImages = document.querySelectorAll('.about img');
+  aboutImages.forEach(img => {
+    img.addEventListener('mouseover', () => {
+      img.style.transform = 'scale(1.05) rotate(1deg)';
+    });
+    
+    img.addEventListener('mouseout', () => {
+      img.style.transform = 'scale(1)';
+    });
+  });
+
+  // Add parallax effect to hero section
+  const heroSection = document.getElementById('hero');
+  if (heroSection) {
+    window.addEventListener('scroll', () => {
+      const scrollPosition = window.scrollY;
+      const heroImage = heroSection.querySelector('img');
+      if (heroImage) {
+        heroImage.style.transform = `translateY(${scrollPosition * 0.4}px)`;
+      }
+    });
+  }
+
+  // Animate navigation items on hover
+  const navItems = document.querySelectorAll('#navmenu ul li');
+  navItems.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      const link = item.querySelector('a');
+      if (link) {
+        link.style.transform = 'translateY(-3px)';
+      }
+    });
+    
+    item.addEventListener('mouseleave', () => {
+      const link = item.querySelector('a');
+      if (link) {
+        link.style.transform = 'translateY(0)';
+      }
+    });
+  });
+
+  // Make site name more dynamic
+  const siteNames = document.querySelectorAll('.sitename');
+  siteNames.forEach(name => {
+    name.addEventListener('mouseenter', () => {
+      name.style.letterSpacing = '1px';
+      name.style.animationDuration = '3s';
+    });
+    
+    name.addEventListener('mouseleave', () => {
+      name.style.letterSpacing = 'normal';
+      name.style.animationDuration = '5s';
+    });
+  });
+  
+  // Add a preloader if needed
+  function addPreloader() {
+    const preloader = document.createElement('div');
+    preloader.className = 'preloader';
+    preloader.innerHTML = `
+      <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+      </div>
+    `;
+    document.body.prepend(preloader);
+    
+    window.addEventListener('load', () => {
+      preloader.style.opacity = '0';
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 500);
+    });
+  }
+  
+  // Uncomment to add preloader
+  // addPreloader();
+  
+  // Add a custom cursor (optional enhancement)
+  function addCustomCursor() {
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    document.body.appendChild(cursor);
+    
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+    
+    const links = document.querySelectorAll('a, button');
+    links.forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        cursor.classList.add('cursor-grow');
+      });
+      
+      link.addEventListener('mouseleave', () => {
+        cursor.classList.remove('cursor-grow');
+      });
+    });
+  }
+  
+  // Uncomment to add custom cursor
+  // addCustomCursor();
+});
+
+// Add fade effect to testimonials/carousel if present
+if (typeof $ !== 'undefined') {
+  $(document).ready(function() {
+    if ($.fn.owlCarousel) {
+      $(".owl-carousel").owlCarousel({
+        autoplay: true,
+        dots: true,
+        loop: true,
+        responsive: {
+          0: { items: 1 },
+          768: { items: 2 },
+          900: { items: 3 }
+        },
+        animateOut: 'fadeOut',
+        animateIn: 'fadeIn'
+      });
+    }
+  });
+}
+  </script>
 
 </body>
 
