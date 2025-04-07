@@ -81,6 +81,7 @@
 ======================================================== -->
     <link type="text/css" rel="stylesheet" id="dark-mode-custom-link" />
     <link type="text/css" rel="stylesheet" id="dark-mode-general-link" />
+    <link rel="stylesheet" href="../fades.css">
     <style lang="en" type="text/css" id="dark-mode-custom-style"></style>
     <style lang="en" type="text/css" id="dark-mode-native-style"></style>
     <style lang="en" type="text/css" id="dark-mode-native-sheet"></style>
@@ -105,11 +106,9 @@
 
         <nav id="navmenu" class="navmenu">
           <ul>
-            <li>
-              <a href="/index.html" id="home">Home<br /></a>
-            </li>
-            <li><a href="/about/index.html" id="about">About</a></li>
-            <li><a href="/portfolio/index.html" id="courses">Porfolio</a></li>
+            <li><a href="../../../../umurava-challenge-fn/TheEliteGroup/elitegroup/index.html" id="home">Home<br></a></li>
+            <li><a href="../../../umurava-challenge-fn/TheEliteGroup//elitegroup/about/index.html" id="about">About</a></li>
+            <li><a href="../../../umurava-challenge-fn/TheEliteGroup/elitegroup/portfolio/index.html" id="courses">Porfolio</a></li>
             <!-- <li><a href="trainers.html">Trainers</a></li> -->
             <!-- <li><a href="updates.php" id="events">Updates</a></li>
               
@@ -531,5 +530,275 @@
     ></script>
     <!-- Main JS File -->
     <script src="./index_files/main.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+  // Initialize AOS animation library if it's loaded
+  if (typeof AOS !== 'undefined') {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: false,
+      mirror: false
+    });
+  }
+
+  // Apply animations to page title section
+  const titleElements = document.querySelectorAll('.page-title h1, .page-title p');
+  
+  setTimeout(() => {
+    titleElements.forEach((element, index) => {
+      setTimeout(() => {
+        element.classList.add('animate-fade-in');
+      }, index * 300);
+    });
+  }, 300);
+
+  // Apply animations to breadcrumbs
+  const breadcrumbs = document.querySelectorAll('.breadcrumbs ol li');
+  breadcrumbs.forEach((item, index) => {
+    setTimeout(() => {
+      item.classList.add('animate-fade-in');
+    }, 600 + (index * 200));
+  });
+
+  // Apply animations to about section elements
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Different animations based on element type
+        if (entry.target.tagName === 'H2') {
+          entry.target.classList.add('animate-fade-in');
+        } else if (entry.target.classList.contains('mission-box')) {
+          entry.target.classList.add('animate-scale-up');
+        } else if (entry.target.classList.contains('stats-item')) {
+          entry.target.classList.add('animated');
+        } else if (entry.target.classList.contains('testimonial-item')) {
+          entry.target.classList.add('animated');
+        } else {
+          entry.target.classList.add('animate-fade-in');
+        }
+        
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  
+  // Observe all elements that need animation
+  const animateElements = document.querySelectorAll(
+    '.content h2, .content p, .content ul li, ' +
+    '.mission h2, .mission p, .mission-box, ' +
+    '.stats-item, .testimonial-item'
+  );
+  
+  animateElements.forEach(el => {
+    observer.observe(el);
+  });
+
+  // About section image and content animations
+  const aboutRows = document.querySelectorAll('#about-us .row');
+  
+  const rowObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const imageCol = entry.target.querySelector('.col-lg-6:first-child');
+        const contentCol = entry.target.querySelector('.col-lg-6.content');
+        
+        if (imageCol) setTimeout(() => imageCol.classList.add('animate-slide-left'), 100);
+        if (contentCol) setTimeout(() => contentCol.classList.add('animate-slide-right'), 300);
+        
+        rowObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  
+  aboutRows.forEach(row => {
+    rowObserver.observe(row);
+  });
+
+  // Mission boxes staggered animation
+  const missionBoxes = document.querySelectorAll('.mission-box');
+  
+  const missionObserver = new IntersectionObserver((entries) => {
+    const visibleBoxes = entries.filter(entry => entry.isIntersecting);
+    
+    visibleBoxes.forEach((entry, index) => {
+      setTimeout(() => {
+        entry.target.classList.add('animate-scale-up');
+      }, index * 200);
+      
+      missionObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.2 });
+  
+  missionBoxes.forEach(box => {
+    missionObserver.observe(box);
+  });
+
+  // Stats counter animation
+  const statsItems = document.querySelectorAll('.stats-item .purecounter');
+  
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const target = entry.target;
+        const endValue = parseInt(target.getAttribute('data-purecounter-end'));
+        
+        animateCounter(target, 0, endValue, 2000);
+        statsObserver.unobserve(target);
+      }
+    });
+  }, { threshold: 0.5 });
+  
+  statsItems.forEach(item => {
+    statsObserver.observe(item);
+  });
+
+  // Counter animation function
+  function animateCounter(element, start, end, duration) {
+    let startTime = null;
+    
+    function animate(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const value = Math.floor(progress * (end - start) + start);
+      element.textContent = value;
+      
+      if (progress < 1) {
+        window.requestAnimationFrame(animate);
+      }
+    }
+    
+    window.requestAnimationFrame(animate);
+  }
+
+  // Testimonials animation
+  const testimonials = document.querySelectorAll('.testimonial-item');
+  
+  const testimonialObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('animated');
+        }, index * A300);
+        
+        testimonialObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  
+  testimonials.forEach(item => {
+    testimonialObserver.observe(item);
+  });
+
+  // Scroll to top functionality
+  const scrollTopButton = document.getElementById('scroll-top');
+  
+  if (scrollTopButton) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollTopButton.classList.add('active');
+      } else {
+        scrollTopButton.classList.remove('active');
+      }
+    });
+    
+    scrollTopButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+
+  // Header scroll effect
+  const header = document.getElementById('header');
+  
+  if (header) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  }
+
+  // Add hover effects for about section images
+  const aboutImages = document.querySelectorAll('#about-us img');
+  aboutImages.forEach(img => {
+    img.addEventListener('mouseover', () => {
+      img.style.transform = 'scale(1.05) rotate(1deg)';
+    });
+    
+    img.addEventListener('mouseout', () => {
+      img.style.transform = 'scale(1)';
+    });
+  });
+
+  // Animate navigation items on hover
+  const navItems = document.querySelectorAll('#navmenu ul li');
+  navItems.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      const link = item.querySelector('a');
+      if (link) {
+        link.style.transform = 'translateY(-3px)';
+      }
+    });
+    
+    item.addEventListener('mouseleave', () => {
+      const link = item.querySelector('a');
+      if (link) {
+        link.style.transform = 'translateY(0)';
+      }
+    });
+  });
+
+  // Make site name more dynamic
+  const siteNames = document.querySelectorAll('.sitename');
+  siteNames.forEach(name => {
+    name.addEventListener('mouseenter', () => {
+      name.style.letterSpacing = '1px';
+    });
+    
+    name.addEventListener('mouseleave', () => {
+      name.style.letterSpacing = 'normal';
+    });
+  });
+  
+  // Mission box hover effects
+  document.querySelectorAll('.mission-box').forEach(box => {
+    box.addEventListener('mouseenter', () => {
+      box.style.transform = 'translateY(-10px)';
+      box.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+    });
+    
+    box.addEventListener('mouseleave', () => {
+      box.style.transform = 'translateY(0)';
+      box.style.boxShadow = 'none';
+    });
+  });
+  
+  // Animate check icons in about section
+  const checkIcons = document.querySelectorAll('.bi-check-circle');
+  checkIcons.forEach(icon => {
+    icon.classList.add('bounce');
+  });
+  
+  // Fix an error in the testimonial animation timing
+  const fixTestimonialDelayError = () => {
+    const testimonials = document.querySelectorAll('.testimonial-item');
+    testimonials.forEach((item, index) => {
+      setTimeout(() => {
+        item.classList.add('animated');
+      }, index * 300); // Fixed the incorrect variable A300
+    });
+  };
+  
+  // Call the fix function
+  fixTestimonialDelayError();
+});
+    </script>
   </body>
 </html>
+ 
