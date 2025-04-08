@@ -18,7 +18,7 @@
     <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin="" />
     <link href="./index_files/css2" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
+    <link rel="stylesheet" href="../assets/css/portfolio.css">
 
     <!-- Vendor CSS Files -->
     <link
@@ -490,5 +490,303 @@
     ></script>
     <!-- Main JS File -->
     <script src="./index_files/main.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+  // Initialize AOS animation library if it's loaded
+  if (typeof AOS !== 'undefined') {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: false,
+      mirror: false
+    });
+  }
+
+  // Portfolio-specific animations
+
+  // Animate page title elements
+  const pageTitle = document.querySelector('.page-title h1');
+  const pageDescription = document.querySelector('.page-title p');
+  const breadcrumbs = document.querySelector('.breadcrumbs ol');
+
+  if (pageTitle) {
+    setTimeout(() => {
+      pageTitle.classList.add('animate-fade-in');
+    }, 300);
+  }
+
+  if (pageDescription) {
+    setTimeout(() => {
+      pageDescription.classList.add('animate-fade-in');
+    }, 500);
+  }
+
+  if (breadcrumbs) {
+    setTimeout(() => {
+      breadcrumbs.classList.add('animate-fade-in');
+    }, 700);
+  }
+
+  // Apply staggered animations to portfolio items
+  const courseItems = document.querySelectorAll('.course-item');
+
+  courseItems.forEach((item, index) => {
+    setTimeout(() => {
+      item.style.opacity = '1';
+      item.style.transform = 'translateY(0)';
+    }, 800 + (index * 200));
+  });
+
+  // Apply animations to elements as they enter viewport
+  const animateElements = document.querySelectorAll('.courses h3, .courses p, .section-title h2, .section-title p');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        if (entry.target.tagName === 'H3') {
+          entry.target.classList.add('animate-fade-in');
+        } else if (entry.target.classList.contains('section-title')) {
+          entry.target.classList.add('animate-scale-up');
+        } else {
+          entry.target.classList.add('animate-fade-in');
+        }
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  animateElements.forEach(el => {
+    observer.observe(el);
+  });
+
+  // Apply alternating slide-in animations to rows
+  const rows = document.querySelectorAll('.row');
+
+  const rowObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        const children = entry.target.querySelectorAll('.col-lg-4');
+
+        children.forEach((child, i) => {
+          setTimeout(() => {
+            if (i % 3 === 0) {
+              child.classList.add('animate-slide-right');
+            } else if (i % 3 === 1) {
+              child.classList.add('animate-fade-in');
+            } else {
+              child.classList.add('animate-slide-left');
+            }
+          }, i * 200);
+        });
+
+        rowObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  rows.forEach(row => {
+    rowObserver.observe(row);
+  });
+
+  // Add animated hover effect to trainers section
+  const trainerProfiles = document.querySelectorAll('.trainer-profile');
+
+  trainerProfiles.forEach(profile => {
+    profile.addEventListener('mouseenter', () => {
+      const img = profile.querySelector('img');
+      if (img) {
+        img.style.transform = 'scale(1.1)';
+      }
+    });
+
+    profile.addEventListener('mouseleave', () => {
+      const img = profile.querySelector('img');
+      if (img) {
+        img.style.transform = 'scale(1)';
+      }
+    });
+  });
+
+  // Scroll to top functionality
+  const scrollTopButton = document.getElementById('scroll-top');
+
+  if (scrollTopButton) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollTopButton.classList.add('active');
+      } else {
+        scrollTopButton.classList.remove('active');
+      }
+    });
+
+    scrollTopButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  }
+
+  // Header scroll effect
+  const header = document.getElementById('header');
+
+  if (header) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  }
+
+  // Add premium glow effect to important buttons
+  const premiumButtons = document.querySelectorAll('.btn-get-started, .btn-getstarted, .price a');
+  premiumButtons.forEach(button => {
+    button.classList.add('premium-glow');
+  });
+
+  // Make site name more dynamic
+  const siteNames = document.querySelectorAll('.sitename');
+  siteNames.forEach(name => {
+    name.addEventListener('mouseenter', () => {
+      name.style.letterSpacing = '1px';
+      name.style.animationDuration = '3s';
+    });
+
+    name.addEventListener('mouseleave', () => {
+      name.style.letterSpacing = 'normal';
+      name.style.animationDuration = '5s';
+    });
+  });
+
+  // Animate navigation items on hover
+  const navItems = document.querySelectorAll('#navmenu ul li');
+  navItems.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      const link = item.querySelector('a');
+      if (link) {
+        link.style.transform = 'translateY(-3px)';
+        link.style.transitionDuration = '0.3s';
+      }
+    });
+
+    item.addEventListener('mouseleave', () => {
+      const link = item.querySelector('a');
+      if (link) {
+        link.style.transform = 'translateY(0)';
+      }
+    });
+  });
+
+  // Add a custom hover effect for course items
+  courseItems.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      const description = item.querySelector('.description');
+      if (description) {
+        description.style.height = 'auto';
+        description.style.maxHeight = '200px';
+        description.style.overflow = 'visible';
+      }
+    });
+
+    item.addEventListener('mouseleave', () => {
+      const description = item.querySelector('.description');
+      if (description) {
+        description.style.height = '';
+        description.style.maxHeight = '';
+        description.style.overflow = '';
+      }
+    });
+  });
+
+  // Add a preloader for better page loading experience
+  function addPreloader() {
+    const preloader = document.createElement('div');
+    preloader.className = 'preloader';
+    preloader.innerHTML = `
+      <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+      </div>
+    `;
+    document.body.prepend(preloader);
+
+    window.addEventListener('load', () => {
+      preloader.style.opacity = '0';
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 500);
+    });
+  }
+
+  // Uncomment to add preloader
+  // addPreloader();
+
+  // Add a custom cursor for a more interactive experience
+  function addCustomCursor() {
+    const cursor = document.createElement('div');
+    cursor.className = 'custom-cursor';
+    document.body.appendChild(cursor);
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    const links = document.querySelectorAll('a, button, .course-item');
+    links.forEach(link => {
+      link.addEventListener('mouseenter', () => {
+        cursor.classList.add('cursor-grow');
+      });
+
+      link.addEventListener('mouseleave', () => {
+        cursor.classList.remove('cursor-grow');
+      });
+    });
+  }
+
+  // Uncomment to add custom cursor
+  // addCustomCursor();
+
+  // Add "Apply Now" button hover effect
+  const applyButtons = document.querySelectorAll('.price a');
+  applyButtons.forEach(button => {
+    button.addEventListener('mouseenter', () => {
+      button.style.backgroundColor = '#5fcf80';
+      button.style.color = 'white';
+      button.style.transform = 'scale(1.05)';
+      button.style.transition = 'all 0.3s ease';
+    });
+
+    button.addEventListener('mouseleave', () => {
+      button.style.backgroundColor = '';
+      button.style.color = '';
+      button.style.transform = '';
+    });
+  });
+});
+
+// Add fade effect to testimonials/carousel if present
+if (typeof $ !== 'undefined') {
+  $(document).ready(function() {
+    if ($.fn.owlCarousel) {
+      $(".owl-carousel").owlCarousel({
+        autoplay: true,
+        dots: true,
+        loop: true,
+        responsive: {
+          0: { items: 1 },
+          768: { items: 2 },
+          900: { items: 3 }
+        },
+        animateOut: 'fadeOut',
+        animateIn: 'fadeIn'
+      });
+    }
+  });
+}
+    </script>
   </body>
 </html>
